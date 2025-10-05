@@ -261,13 +261,20 @@
             margin-top: 5px;
         }
 
-        .division-badge {
-            display: inline-block;
+        .loading {
+            text-align: center;
+            padding: 40px;
+            font-size: 1.2em;
+            color: #8a8f9e;
+        }
+
+        .error {
             background: rgba(213, 10, 10, 0.2);
-            padding: 4px 10px;
-            border-radius: 12px;
-            font-size: 0.75em;
-            margin-top: 5px;
+            border: 1px solid #d50a0a;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            color: #ff6b6b;
         }
 
         @media (max-width: 1024px) {
@@ -316,6 +323,7 @@
                         </tr>
                     </thead>
                     <tbody id="standingsBody">
+                        <tr><td colspan="6" class="loading">Loading data...</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -341,101 +349,41 @@
 
         <div class="performers-section">
             <h2 class="section-title">🌟 Top Performers</h2>
-            <div id="performersContainer"></div>
+            <div id="performersContainer">
+                <div class="loading">Loading performers...</div>
+            </div>
         </div>
     </div>
 
-    <!-- External JSON Data (simulating nfl-data.json file) -->
-    <script id="jsonData" type="application/json">
-    {
-      "season": "2024-2025",
-      "week": "Week 5",
-      "conference": "AFC East",
-      "teams": [
-        {
-          "teamId": 1,
-          "teamName": "Miami Dolphins",
-          "city": "Miami",
-          "wins": 3,
-          "losses": 1,
-          "ties": 0,
-          "pointsFor": 112,
-          "pointsAgainst": 89,
-          "division": "AFC East",
-          "nextOpponent": "New England Patriots",
-          "logo": "🐬"
-        },
-        {
-          "teamId": 2,
-          "teamName": "Buffalo Bills",
-          "city": "Buffalo",
-          "wins": 3,
-          "losses": 2,
-          "ties": 0,
-          "pointsFor": 145,
-          "pointsAgainst": 108,
-          "division": "AFC East",
-          "nextOpponent": "New York Jets",
-          "logo": "🦬"
-        },
-        {
-          "teamId": 3,
-          "teamName": "New York Jets",
-          "city": "New York",
-          "wins": 2,
-          "losses": 3,
-          "ties": 0,
-          "pointsFor": 98,
-          "pointsAgainst": 115,
-          "division": "AFC East",
-          "nextOpponent": "Buffalo Bills",
-          "logo": "✈️"
-        },
-        {
-          "teamId": 4,
-          "teamName": "New England Patriots",
-          "city": "New England",
-          "wins": 1,
-          "losses": 4,
-          "ties": 0,
-          "pointsFor": 87,
-          "pointsAgainst": 132,
-          "division": "AFC East",
-          "nextOpponent": "Miami Dolphins",
-          "logo": "🏈"
-        }
-      ],
-      "topPerformers": [
-        {
-          "playerName": "Tyreek Hill",
-          "team": "Miami Dolphins",
-          "position": "WR",
-          "stat": "487 Receiving Yards"
-        },
-        {
-          "playerName": "Josh Allen",
-          "team": "Buffalo Bills",
-          "position": "QB",
-          "stat": "1,289 Passing Yards"
-        },
-        {
-          "playerName": "Breece Hall",
-          "team": "New York Jets",
-          "position": "RB",
-          "stat": "412 Rushing Yards"
-        }
-      ]
-    }
-    </script>
-
     <script>
-        function loadNFLData() {
+        // Function to load JSON data from external file
+        async function loadNFLData() {
             try {
-                const jsonScript = document.getElementById('jsonData');
-                const data = JSON.parse(jsonScript.textContent);
+                // Fetch the external JSON file from GitHub Pages
+                const response = await fetch('https://melendja.github.io/NFL_Dashboard/nfl_json_file.json');
+                
+                // Check if the response is successful
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                // Parse the JSON data
+                const data = await response.json();
+                
+                // Display the data
                 displayNFLData(data);
             } catch (error) {
                 console.error('Error loading data:', error);
+                document.getElementById('standingsBody').innerHTML = `
+                    <tr>
+                        <td colspan="6">
+                            <div class="error">
+                                <strong>Error loading data:</strong> ${error.message}<br>
+                                Unable to load data from the remote JSON file.
+                            </div>
+                        </td>
+                    </tr>
+                `;
             }
         }
 
@@ -507,6 +455,7 @@
             document.getElementById('performersContainer').innerHTML = performersHTML;
         }
 
+        // Load data when page loads
         window.addEventListener('DOMContentLoaded', loadNFLData);
     </script>
 </body>
