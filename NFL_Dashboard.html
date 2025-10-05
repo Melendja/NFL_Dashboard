@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NFL Dashboard - Standings</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: #0a0e1a;
+            color: #ffffff;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .dashboard {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #013369 0%, #d50a0a 100%);
+            padding: 40px 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 20px rgba(213, 10, 10, 0.3);
+        }
+
+        .header h1 {
+            font-size: 3em;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .header-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-top: 20px;
+            font-size: 1.2em;
+        }
+
+        .season-badge {
+            background: rgba(255,255,255,0.2);
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: bold;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .standings-section {
+            background: #1a1f2e;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+        }
+
+        .section-title {
+            font-size: 1.8em;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #d50a0a;
+            letter-spacing: 1px;
+        }
+
+        .standings-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .standings-table thead {
+            background: #013369;
+        }
+
+        .standings-table th {
+            padding: 15px 10px;
+            text-align: left;
+            font-size: 0.85em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        .standings-table th:first-child {
+            border-top-left-radius: 8px;
+        }
+
+        .standings-table th:last-child {
+            border-top-right-radius: 8px;
+        }
+
+        .standings-table td {
+            padding: 18px 10px;
+            border-bottom: 1px solid #2a2f3e;
+        }
+
+        .standings-table tbody tr {
+            transition: all 0.3s;
+            background: #1a1f2e;
+        }
+
+        .standings-table tbody tr:hover {
+            background: #252a3a;
+            transform: scale(1.01);
+        }
+
+        .rank-cell {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #d50a0a;
+            width: 50px;
+        }
+
+        .team-cell {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        .team-logo {
+            font-size: 2em;
+        }
+
+        .team-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .team-name {
+            font-size: 1em;
+        }
+
+        .team-city {
+            font-size: 0.8em;
+            color: #8a8f9e;
+            font-weight: normal;
+        }
+
+        .record {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #4CAF50;
+        }
+
+        .stat-value {
+            font-weight: 600;
+        }
+
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #013369 0%, #004080 100%);
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(1, 51, 105, 0.4);
+        }
+
+        .stat-card h3 {
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+            opacity: 0.9;
+        }
+
+        .stat-card .big-number {
+            font-size: 3em;
+            font-weight: 900;
+            color: #d50a0a;
+            line-height: 1;
+        }
+
+        .stat-card .label {
+            font-size: 0.9em;
+            margin-top: 5px;
+            opacity: 0.8;
+        }
+
+        .performers-section {
+            background: #1a1f2e;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+        }
+
+        .performer-card {
+            background: linear-gradient(135deg, #252a3a 0%, #1a1f2e 100%);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border-left: 4px solid #d50a0a;
+            transition: all 0.3s;
+        }
+
+        .performer-card:hover {
+            transform: translateX(5px);
+            border-left-width: 6px;
+        }
+
+        .performer-name {
+            font-size: 1.3em;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .performer-details {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .performer-team {
+            color: #8a8f9e;
+            font-size: 0.95em;
+        }
+
+        .performer-position {
+            background: #013369;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.85em;
+            font-weight: bold;
+        }
+
+        .performer-stat {
+            color: #4CAF50;
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-top: 8px;
+        }
+
+        .next-game {
+            font-size: 0.85em;
+            color: #8a8f9e;
+            margin-top: 5px;
+        }
+
+        .division-badge {
+            display: inline-block;
+            background: rgba(213, 10, 10, 0.2);
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.75em;
+            margin-top: 5px;
+        }
+
+        @media (max-width: 1024px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2em;
+            }
+
+            .standings-table {
+                font-size: 0.9em;
+            }
+
+            .team-cell {
+                font-size: 0.95em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <div class="header">
+            <h1>🏈 NFL DASHBOARD</h1>
+            <div class="header-info">
+                <div class="season-badge" id="seasonInfo">Loading...</div>
+                <div class="season-badge" id="weekInfo">Loading...</div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="standings-section">
+                <h2 class="section-title" id="divisionTitle">Division Standings</h2>
+                <table class="standings-table">
+                    <thead>
+                        <tr>
+                            <th>RNK</th>
+                            <th>TEAM</th>
+                            <th>W-L-T</th>
+                            <th>PF</th>
+                            <th>PA</th>
+                            <th>NEXT</th>
+                        </tr>
+                    </thead>
+                    <tbody id="standingsBody">
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="sidebar">
+                <div class="stat-card">
+                    <h3>Total Teams</h3>
+                    <div class="big-number" id="totalTeams">-</div>
+                    <div class="label">in division</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Avg Points Per Game</h3>
+                    <div class="big-number" id="avgPoints">-</div>
+                    <div class="label">offensive average</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Total Games</h3>
+                    <div class="big-number" id="totalGames">-</div>
+                    <div class="label">played this season</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="performers-section">
+            <h2 class="section-title">🌟 Top Performers</h2>
+            <div id="performersContainer"></div>
+        </div>
+    </div>
+
+    <!-- External JSON Data (simulating nfl-data.json file) -->
+    <script id="jsonData" type="application/json">
+    {
+      "season": "2024-2025",
+      "week": "Week 5",
+      "conference": "AFC East",
+      "teams": [
+        {
+          "teamId": 1,
+          "teamName": "Miami Dolphins",
+          "city": "Miami",
+          "wins": 3,
+          "losses": 1,
+          "ties": 0,
+          "pointsFor": 112,
+          "pointsAgainst": 89,
+          "division": "AFC East",
+          "nextOpponent": "New England Patriots",
+          "logo": "🐬"
+        },
+        {
+          "teamId": 2,
+          "teamName": "Buffalo Bills",
+          "city": "Buffalo",
+          "wins": 3,
+          "losses": 2,
+          "ties": 0,
+          "pointsFor": 145,
+          "pointsAgainst": 108,
+          "division": "AFC East",
+          "nextOpponent": "New York Jets",
+          "logo": "🦬"
+        },
+        {
+          "teamId": 3,
+          "teamName": "New York Jets",
+          "city": "New York",
+          "wins": 2,
+          "losses": 3,
+          "ties": 0,
+          "pointsFor": 98,
+          "pointsAgainst": 115,
+          "division": "AFC East",
+          "nextOpponent": "Buffalo Bills",
+          "logo": "✈️"
+        },
+        {
+          "teamId": 4,
+          "teamName": "New England Patriots",
+          "city": "New England",
+          "wins": 1,
+          "losses": 4,
+          "ties": 0,
+          "pointsFor": 87,
+          "pointsAgainst": 132,
+          "division": "AFC East",
+          "nextOpponent": "Miami Dolphins",
+          "logo": "🏈"
+        }
+      ],
+      "topPerformers": [
+        {
+          "playerName": "Tyreek Hill",
+          "team": "Miami Dolphins",
+          "position": "WR",
+          "stat": "487 Receiving Yards"
+        },
+        {
+          "playerName": "Josh Allen",
+          "team": "Buffalo Bills",
+          "position": "QB",
+          "stat": "1,289 Passing Yards"
+        },
+        {
+          "playerName": "Breece Hall",
+          "team": "New York Jets",
+          "position": "RB",
+          "stat": "412 Rushing Yards"
+        }
+      ]
+    }
+    </script>
+
+    <script>
+        function loadNFLData() {
+            try {
+                const jsonScript = document.getElementById('jsonData');
+                const data = JSON.parse(jsonScript.textContent);
+                displayNFLData(data);
+            } catch (error) {
+                console.error('Error loading data:', error);
+            }
+        }
+
+        function displayNFLData(data) {
+            // Update header
+            document.getElementById('seasonInfo').textContent = data.season;
+            document.getElementById('weekInfo').textContent = data.week;
+            document.getElementById('divisionTitle').textContent = `${data.conference} Standings`;
+
+            // Sort teams by wins (descending)
+            const sortedTeams = [...data.teams].sort((a, b) => {
+                if (b.wins !== a.wins) return b.wins - a.wins;
+                const aDiff = a.pointsFor - a.pointsAgainst;
+                const bDiff = b.pointsFor - b.pointsAgainst;
+                return bDiff - aDiff;
+            });
+
+            // Display standings
+            let standingsHTML = '';
+            sortedTeams.forEach((team, index) => {
+                const record = `${team.wins}-${team.losses}-${team.ties}`;
+                standingsHTML += `
+                    <tr>
+                        <td class="rank-cell">${index + 1}</td>
+                        <td>
+                            <div class="team-cell">
+                                <div class="team-logo">${team.logo}</div>
+                                <div class="team-info">
+                                    <div class="team-name">${team.teamName}</div>
+                                    <div class="team-city">${team.city}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="record">${record}</td>
+                        <td class="stat-value">${team.pointsFor}</td>
+                        <td class="stat-value">${team.pointsAgainst}</td>
+                        <td>
+                            <div class="next-game">vs ${team.nextOpponent}</div>
+                        </td>
+                    </tr>
+                `;
+            });
+            document.getElementById('standingsBody').innerHTML = standingsHTML;
+
+            // Calculate stats
+            const totalTeams = data.teams.length;
+            const totalPoints = data.teams.reduce((sum, t) => sum + t.pointsFor, 0);
+            const totalGames = data.teams.reduce((sum, t) => sum + t.wins + t.losses + t.ties, 0);
+            const avgPoints = (totalPoints / totalGames).toFixed(1);
+
+            document.getElementById('totalTeams').textContent = totalTeams;
+            document.getElementById('avgPoints').textContent = avgPoints;
+            document.getElementById('totalGames').textContent = totalGames;
+
+            // Display top performers
+            let performersHTML = '';
+            data.topPerformers.forEach(player => {
+                performersHTML += `
+                    <div class="performer-card">
+                        <div class="performer-name">${player.playerName}</div>
+                        <div class="performer-team">${player.team}</div>
+                        <div class="performer-stat">${player.stat}</div>
+                        <div class="performer-details">
+                            <span class="performer-position">${player.position}</span>
+                        </div>
+                    </div>
+                `;
+            });
+            document.getElementById('performersContainer').innerHTML = performersHTML;
+        }
+
+        window.addEventListener('DOMContentLoaded', loadNFLData);
+    </script>
+</body>
+</html>
