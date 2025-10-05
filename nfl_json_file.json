@@ -1,0 +1,79 @@
+{
+  "season": "2024-2025",
+  "week": "Week 5",
+  "conference": "NFC East",
+  "teams": [
+    {
+      "teamId": 1,
+      "teamName": "Dallas Cowboys",
+      "city": "Dallas",
+      "wins": 3,
+      "losses": 1,
+      "ties": 0,
+      "pointsFor": 128,
+      "pointsAgainst": 95,
+      "division": "NFC East",
+      "nextOpponent": "Philadelphia Eagles",
+      "logo": "⭐"
+    },
+    {
+      "teamId": 2,
+      "teamName": "Philadelphia Eagles",
+      "city": "Philadelphia",
+      "wins": 3,
+      "losses": 2,
+      "ties": 0,
+      "pointsFor": 118,
+      "pointsAgainst": 102,
+      "division": "NFC East",
+      "nextOpponent": "Dallas Cowboys",
+      "logo": "🦅"
+    },
+    {
+      "teamId": 3,
+      "teamName": "New York Giants",
+      "city": "New York",
+      "wins": 2,
+      "losses": 3,
+      "ties": 0,
+      "pointsFor": 92,
+      "pointsAgainst": 110,
+      "division": "NFC East",
+      "nextOpponent": "Washington Commanders",
+      "logo": "🏈"
+    },
+    {
+      "teamId": 4,
+      "teamName": "Washington Commanders",
+      "city": "Washington",
+      "wins": 1,
+      "losses": 4,
+      "ties": 0,
+      "pointsFor": 85,
+      "pointsAgainst": 125,
+      "division": "NFC East",
+      "nextOpponent": "New York Giants",
+      "logo": "🎖️"
+    }
+  ],
+  "topPerformers": [
+    {
+      "playerName": "CeeDee Lamb",
+      "team": "Dallas Cowboys",
+      "position": "WR",
+      "stat": "523 Receiving Yards"
+    },
+    {
+      "playerName": "Dak Prescott",
+      "team": "Dallas Cowboys",
+      "position": "QB",
+      "stat": "1,345 Passing Yards, 12 TDs"
+    },
+    {
+      "playerName": "Micah Parsons",
+      "team": "Dallas Cowboys",
+      "position": "LB",
+      "stat": "6.5 Sacks, 28 Tackles"
+    }
+  ]
+}
